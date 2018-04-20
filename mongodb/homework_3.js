@@ -113,12 +113,6 @@ function countAlbMovies(db, ref){
     });
 }
 
-//Function for closing connection
-function closeConn(client){
-    console.log("Closing connection with server...");
-    client.close();
-}
-
 MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
@@ -137,8 +131,8 @@ MongoClient.connect(url, function(err, client) {
 		    // Part D Execution 		
                     countAlbMovies(db, function(){
                                  
-                            
-                    	});    
+                    client.close();        
+                    	    
                     });
                 });
             });
