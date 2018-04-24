@@ -5,3 +5,95 @@
 // If you'd like to test your commands, you can run 'cat homework_4.txt | cypher-shell -u neo4j -p test' from
 // the vagrant box command line. Make sure neo4j is running first.
 // CREATE (a:person { name: 't' });
+
+// Create Nodes
+
+CREATE (n:Country {name: 'Albania'});
+CREATE (n:Country {name: 'Japan'});
+CREATE (n:Company {name: 'Denso'});
+CREATE (n:Family_Member {name: 'Sonja'});
+CREATE (n:Family_Member {name: 'Piro'});
+CREATE (n:Family_Member {name: 'Niki'});
+CREATE (n:Family_Member {name: 'Xholion'});
+CREATE (n:Family_Member {name: 'Erald'});
+
+
+// Create Relationships
+
+MATCH (a:Family_Member),(b:Family_Member)
+       WHERE a.name = 'Piro' AND b.name = 'Sonja'
+       CREATE (a)-[r:SPOUSE_OF {married: 1982}]->(b)
+       RETURN type(r), r.married;
+
+MATCH (a:Family_Member), (b:Family_Member)
+       WHERE a.name= 'Niki' AND b.name = 'Xholion'
+       CREATE (a)-[r:BROTHER_OF {from: 1994}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Family_Member), (b:Family_Member)
+       WHERE a.name='Xholion' AND b.name = 'Erald'
+       CREATE (a)-[r:BROTHER_OF {from: 1990}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Family_Member), (b:Family_Member)
+       WHERE a.name='Niki' AND b.name = 'Erald'
+       CREATE (a)-[r:BROTHER_OF {from: 1994}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Family_Member), (b:Family_Member)
+       WHERE a.name='Sonja' AND b.name = 'Niki'
+       CREATE (a)-[r:MOTHER_OF {from: 1994}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Family_Member), (b:Family_Member)
+       WHERE a.name='Sonja' AND b.name = 'Xholion'
+       CREATE (a)-[r:MOTHER_OF {from: 1990}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Family_Member),(b:Family_Member)
+       WHERE a.name = 'Sonja' AND b.name = 'Erald'
+       CREATE (a)-[r:MOTHER_OF {from: 1985}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Family_Member),(b:Family_Member)
+       WHERE a.name = 'Piro' AND b.name = 'Niki'
+       CREATE (a)-[r:FATHER_OF {from: 1994}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Family_Member),(b:Family_Member)
+       WHERE a.name = 'Piro' AND b.name = 'Xholion'
+       CREATE (a)-[r:FATHER_OF {from: 1990}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Family_Member),(b:Family_Member)
+       WHERE a.name = 'Piro' AND b.name = 'Erald'
+       CREATE (a)-[r:FATHER_OF {from: 1985}]->(b)
+       RETURN type(r), r.from;
+
+MATCH (a:Country),(b:Family_Member)
+       WHERE a.name = 'Albania' AND b.name = 'Piro'
+       CREATE (a)-[r:IMMIGRATED_FROM {in: 1997}]->(b)
+       RETURN type(r), r.in;
+
+MATCH (a:Family_Member),(b:Country)
+       WHERE a.name = 'Niki' AND b.name = 'Japan'
+       CREATE (a)-[r:TRAVELED_TO {in: 2017}]->(b)
+       RETURN type(r), r.in;
+
+MATCH (a:Family_Member),(b:Company)
+       WHERE a.name = 'Niki' AND b.name = 'Denso'
+       CREATE (a)-[r:EMPLOYED_AT {in: 2017}]->(b)
+       RETURN type(r), r.in;
+
+MATCH (a:Company),(b:Country)
+       WHERE a.name = 'Denso' AND b.name = 'Japan'
+       CREATE (a)-[r:LOCATED_IN {from: 1956}]->(b)
+       RETURN type(r), r.from;
+
+// Find people who Traveled to Japan
+MATCH (place:Country {name: 'Japan'})<-[c]-(person)
+       RETURN type(c), place.name, person.name;
+
+// Find people who were Employed At at Denso
+MATCH (organization:Company {name: 'Denso'})<-[c]-(person)
+       RETURN type(c), organization.name, person.name
