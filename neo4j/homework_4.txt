@@ -1,4 +1,5 @@
 // The scenario you have used for your schema is:
+// The scenario describes my immediate family, places I have traveled to, places I have worked at, and country of origin.
 
 
 // This is an example. Your own commands should *not* be commented out so we can pipe the file into the cypher-shell.
